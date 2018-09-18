@@ -3,6 +3,26 @@ syntax = "proto3";
 package proto;
 option go_package = "github.com/samsarahq/thunder/internal/proto";
 
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
 message ExampleEvent {
   string table = 1;
+}
+
+message ComplexProto {
+  int64 id = 1 [(gogoproto.moretags) = "sql:\",primary\""];
+  // First types
+  string regularString = 2;
+  string zeroNullString = 3 [(gogoproto.moretags) = "sqlgen:\"nullzero\""];
+  int64 regularInt64 = 4;
+  int64 zeroNullInt64 = 5 [(gogoproto.moretags) = "sqlgen:\"nullzero\""];
+
+  // GQL tests
+  string noGraphString = 6 [(gogoproto.moretags) = "graphql:\"-\""];
+  // Test all null gql fields, where zero value null is a thing (don't return)
+  // int64, float, string, struct, struct pointer, other protobuf type
+
+  int64 testId = 7;
+
+  // Test embedded proto types
 }

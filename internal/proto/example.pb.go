@@ -2,19 +2,21 @@
 // source: example.proto
 
 /*
-Package proto is a generated protocol buffer package.
+	Package proto is a generated protocol buffer package.
 
-It is generated from these files:
-	example.proto
+	It is generated from these files:
+		example.proto
 
-It has these top-level messages:
-	ExampleEvent
+	It has these top-level messages:
+		ExampleEvent
+		ComplexProto
 */
 package proto
 
 import proto1 "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
+import _ "github.com/gogo/protobuf/gogoproto"
 
 import io "io"
 
@@ -45,8 +47,75 @@ func (m *ExampleEvent) GetTable() string {
 	return ""
 }
 
+type ComplexProto struct {
+	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty" sql:",primary"`
+	// First types
+	RegularString  string `protobuf:"bytes,2,opt,name=regularString,proto3" json:"regularString,omitempty"`
+	ZeroNullString string `protobuf:"bytes,3,opt,name=zeroNullString,proto3" json:"zeroNullString,omitempty" sqlgen:"nullzero"`
+	RegularInt64   int64  `protobuf:"varint,4,opt,name=regularInt64,proto3" json:"regularInt64,omitempty"`
+	ZeroNullInt64  int64  `protobuf:"varint,5,opt,name=zeroNullInt64,proto3" json:"zeroNullInt64,omitempty" sqlgen:"nullzero"`
+	// GQL tests
+	NoGraphString string `protobuf:"bytes,6,opt,name=noGraphString,proto3" json:"noGraphString,omitempty" graphql:"-"`
+	TestId        int64  `protobuf:"varint,7,opt,name=testId,proto3" json:"testId,omitempty"`
+}
+
+func (m *ComplexProto) Reset()                    { *m = ComplexProto{} }
+func (m *ComplexProto) String() string            { return proto1.CompactTextString(m) }
+func (*ComplexProto) ProtoMessage()               {}
+func (*ComplexProto) Descriptor() ([]byte, []int) { return fileDescriptorExample, []int{1} }
+
+func (m *ComplexProto) GetId() int64 {
+	if m != nil {
+		return m.Id
+	}
+	return 0
+}
+
+func (m *ComplexProto) GetRegularString() string {
+	if m != nil {
+		return m.RegularString
+	}
+	return ""
+}
+
+func (m *ComplexProto) GetZeroNullString() string {
+	if m != nil {
+		return m.ZeroNullString
+	}
+	return ""
+}
+
+func (m *ComplexProto) GetRegularInt64() int64 {
+	if m != nil {
+		return m.RegularInt64
+	}
+	return 0
+}
+
+func (m *ComplexProto) GetZeroNullInt64() int64 {
+	if m != nil {
+		return m.ZeroNullInt64
+	}
+	return 0
+}
+
+func (m *ComplexProto) GetNoGraphString() string {
+	if m != nil {
+		return m.NoGraphString
+	}
+	return ""
+}
+
+func (m *ComplexProto) GetTestId() int64 {
+	if m != nil {
+		return m.TestId
+	}
+	return 0
+}
+
 func init() {
 	proto1.RegisterType((*ExampleEvent)(nil), "proto.ExampleEvent")
+	proto1.RegisterType((*ComplexProto)(nil), "proto.ComplexProto")
 }
 func (m *ExampleEvent) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
@@ -72,6 +141,62 @@ func (m *ExampleEvent) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
+func (m *ComplexProto) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ComplexProto) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.Id != 0 {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintExample(dAtA, i, uint64(m.Id))
+	}
+	if len(m.RegularString) > 0 {
+		dAtA[i] = 0x12
+		i++
+		i = encodeVarintExample(dAtA, i, uint64(len(m.RegularString)))
+		i += copy(dAtA[i:], m.RegularString)
+	}
+	if len(m.ZeroNullString) > 0 {
+		dAtA[i] = 0x1a
+		i++
+		i = encodeVarintExample(dAtA, i, uint64(len(m.ZeroNullString)))
+		i += copy(dAtA[i:], m.ZeroNullString)
+	}
+	if m.RegularInt64 != 0 {
+		dAtA[i] = 0x20
+		i++
+		i = encodeVarintExample(dAtA, i, uint64(m.RegularInt64))
+	}
+	if m.ZeroNullInt64 != 0 {
+		dAtA[i] = 0x28
+		i++
+		i = encodeVarintExample(dAtA, i, uint64(m.ZeroNullInt64))
+	}
+	if len(m.NoGraphString) > 0 {
+		dAtA[i] = 0x32
+		i++
+		i = encodeVarintExample(dAtA, i, uint64(len(m.NoGraphString)))
+		i += copy(dAtA[i:], m.NoGraphString)
+	}
+	if m.TestId != 0 {
+		dAtA[i] = 0x38
+		i++
+		i = encodeVarintExample(dAtA, i, uint64(m.TestId))
+	}
+	return i, nil
+}
+
 func encodeVarintExample(dAtA []byte, offset int, v uint64) int {
 	for v >= 1<<7 {
 		dAtA[offset] = uint8(v&0x7f | 0x80)
@@ -87,6 +212,36 @@ func (m *ExampleEvent) Size() (n int) {
 	l = len(m.Table)
 	if l > 0 {
 		n += 1 + l + sovExample(uint64(l))
+	}
+	return n
+}
+
+func (m *ComplexProto) Size() (n int) {
+	var l int
+	_ = l
+	if m.Id != 0 {
+		n += 1 + sovExample(uint64(m.Id))
+	}
+	l = len(m.RegularString)
+	if l > 0 {
+		n += 1 + l + sovExample(uint64(l))
+	}
+	l = len(m.ZeroNullString)
+	if l > 0 {
+		n += 1 + l + sovExample(uint64(l))
+	}
+	if m.RegularInt64 != 0 {
+		n += 1 + sovExample(uint64(m.RegularInt64))
+	}
+	if m.ZeroNullInt64 != 0 {
+		n += 1 + sovExample(uint64(m.ZeroNullInt64))
+	}
+	l = len(m.NoGraphString)
+	if l > 0 {
+		n += 1 + l + sovExample(uint64(l))
+	}
+	if m.TestId != 0 {
+		n += 1 + sovExample(uint64(m.TestId))
 	}
 	return n
 }
@@ -162,6 +317,219 @@ func (m *ExampleEvent) Unmarshal(dAtA []byte) error {
 			}
 			m.Table = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipExample(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthExample
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ComplexProto) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowExample
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ComplexProto: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ComplexProto: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
+			}
+			m.Id = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowExample
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Id |= (int64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RegularString", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowExample
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthExample
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.RegularString = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ZeroNullString", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowExample
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthExample
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ZeroNullString = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RegularInt64", wireType)
+			}
+			m.RegularInt64 = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowExample
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.RegularInt64 |= (int64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ZeroNullInt64", wireType)
+			}
+			m.ZeroNullInt64 = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowExample
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ZeroNullInt64 |= (int64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NoGraphString", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowExample
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthExample
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.NoGraphString = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 7:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TestId", wireType)
+			}
+			m.TestId = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowExample
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.TestId |= (int64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipExample(dAtA[iNdEx:])
@@ -291,14 +659,27 @@ var (
 func init() { proto1.RegisterFile("example.proto", fileDescriptorExample) }
 
 var fileDescriptorExample = []byte{
-	// 134 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x4d, 0xad, 0x48, 0xcc,
-	0x2d, 0xc8, 0x49, 0xd5, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x05, 0x53, 0x4a, 0x2a, 0x5c,
-	0x3c, 0xae, 0x10, 0x71, 0xd7, 0xb2, 0xd4, 0xbc, 0x12, 0x21, 0x11, 0x2e, 0xd6, 0x92, 0xc4, 0xa4,
-	0x9c, 0x54, 0x09, 0x46, 0x05, 0x46, 0x0d, 0xce, 0x20, 0x08, 0xc7, 0xc9, 0xf2, 0xc4, 0x23, 0x39,
-	0xc6, 0x0b, 0x8f, 0xe4, 0x18, 0x1f, 0x3c, 0x92, 0x63, 0x8c, 0xd2, 0x4e, 0xcf, 0x2c, 0xc9, 0x28,
-	0x4d, 0xd2, 0x4b, 0xce, 0xcf, 0xd5, 0x2f, 0x4e, 0xcc, 0x2d, 0x4e, 0x2c, 0x4a, 0xcc, 0x28, 0xd4,
-	0x2f, 0xc9, 0x28, 0xcd, 0x4b, 0x49, 0x2d, 0xd2, 0xcf, 0xcc, 0x2b, 0x49, 0x2d, 0xca, 0x4b, 0xcc,
-	0xd1, 0x07, 0x5b, 0x90, 0xc4, 0x06, 0xa6, 0x8c, 0x01, 0x01, 0x00, 0x00, 0xff, 0xff, 0x44, 0x00,
-	0xe4, 0x7b, 0x7f, 0x00, 0x00, 0x00,
+	// 338 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x91, 0xcf, 0x4a, 0xf3, 0x40,
+	0x14, 0xc5, 0x49, 0xfa, 0xb5, 0x1f, 0x8e, 0x4d, 0xc5, 0x41, 0x25, 0xb8, 0x68, 0x65, 0xe8, 0x42,
+	0xd0, 0x36, 0x0b, 0xff, 0x80, 0x15, 0x37, 0x95, 0x22, 0xdd, 0x88, 0xc4, 0x9d, 0xbb, 0xa9, 0x19,
+	0x27, 0x81, 0xc9, 0x4c, 0x3a, 0x99, 0x48, 0xf5, 0x05, 0x75, 0xe9, 0x13, 0x14, 0xe9, 0x23, 0xf4,
+	0x09, 0x64, 0x6e, 0x22, 0x18, 0xc1, 0xd5, 0x9d, 0x73, 0xf8, 0xdd, 0x7b, 0xcf, 0x70, 0x91, 0xc7,
+	0x16, 0x34, 0xcd, 0x04, 0x1b, 0x66, 0x5a, 0x19, 0x85, 0x9b, 0x50, 0xf6, 0x07, 0x3c, 0x31, 0x71,
+	0x31, 0x1b, 0x3e, 0xaa, 0x34, 0xe0, 0x8a, 0xab, 0x00, 0xec, 0x59, 0xf1, 0x04, 0x0a, 0x04, 0xbc,
+	0xca, 0x2e, 0xd2, 0x47, 0xed, 0x49, 0x39, 0x66, 0xf2, 0xcc, 0xa4, 0xc1, 0x3b, 0xa8, 0x69, 0xe8,
+	0x4c, 0x30, 0xdf, 0x39, 0x70, 0x0e, 0x37, 0xc2, 0x52, 0x90, 0x37, 0x17, 0xb5, 0xaf, 0x95, 0xa5,
+	0x16, 0x77, 0xb0, 0x8c, 0x20, 0x37, 0x89, 0x80, 0x69, 0x8c, 0xf1, 0x7a, 0xd9, 0xeb, 0xe4, 0x73,
+	0x31, 0x22, 0xc7, 0x99, 0x4e, 0x52, 0xaa, 0x5f, 0x48, 0xe8, 0x26, 0x11, 0xee, 0x23, 0x4f, 0x33,
+	0x5e, 0x08, 0xaa, 0xef, 0x8d, 0x4e, 0x24, 0xf7, 0x5d, 0x18, 0x59, 0x37, 0xf1, 0x15, 0xea, 0xbc,
+	0x32, 0xad, 0x6e, 0x0b, 0x21, 0x2a, 0xac, 0x61, 0xb1, 0xf1, 0xee, 0x7a, 0xd9, 0xdb, 0xce, 0xe7,
+	0x82, 0x33, 0x39, 0x22, 0xb2, 0x10, 0xc2, 0x52, 0x24, 0xfc, 0x05, 0x63, 0x82, 0xda, 0xd5, 0xbc,
+	0xa9, 0x34, 0xe7, 0xa7, 0xfe, 0x3f, 0x1b, 0x29, 0xac, 0x79, 0xf8, 0x12, 0x79, 0xdf, 0x5d, 0x25,
+	0xd4, 0x84, 0xdc, 0x7f, 0x6c, 0xa8, 0xb3, 0xf8, 0x0c, 0x79, 0x52, 0xdd, 0x68, 0x9a, 0xc5, 0x55,
+	0xbc, 0x16, 0xc4, 0xdb, 0x5a, 0x2f, 0x7b, 0x9b, 0xdc, 0xda, 0xf6, 0xe3, 0x03, 0x12, 0xd6, 0x29,
+	0xbc, 0x87, 0x5a, 0x86, 0xe5, 0x66, 0x1a, 0xf9, 0xff, 0x21, 0x51, 0xa5, 0xc6, 0x17, 0xef, 0xab,
+	0xae, 0xf3, 0xb1, 0xea, 0x3a, 0x9f, 0xab, 0xae, 0xf3, 0x70, 0xf4, 0xe3, 0x58, 0x39, 0x4d, 0x73,
+	0xaa, 0x69, 0x3c, 0x0f, 0x4c, 0x5c, 0xc8, 0x88, 0xe9, 0x20, 0x91, 0x86, 0x69, 0x49, 0x45, 0x75,
+	0xc2, 0x16, 0x94, 0x93, 0xaf, 0x00, 0x00, 0x00, 0xff, 0xff, 0x9a, 0x2f, 0xce, 0xbc, 0xf8, 0x01,
+	0x00, 0x00,
 }

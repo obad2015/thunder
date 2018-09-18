@@ -28,6 +28,8 @@ var DefaultDBConfig = DBConfig{
 func init() {
 	if pw := os.Getenv("DB_PASSWORD"); pw != "" {
 		DefaultDBConfig.Password = pw
+	} else {
+		DefaultDBConfig.Password = "dev"
 	}
 }
 
