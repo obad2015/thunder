@@ -31,10 +31,17 @@ func init() {
 	interfaceTyp = reflect.TypeOf(&x).Elem()
 }
 
-// ToArray converts a []interface{} slice into an equivalent fixed-length array
+// MakeHashable converts a []interface{} slice into an equivalent fixed-length array
 // [...]interface{} for use as a comparable map key
-//
-func ToArray(s []interface{}) interface{} {
+func MakeHashable(s []interface{}) interface{} {
+	// Convert byte slices into strings as they are otherwise not comparable/hashable.
+	for i, elem := range s {
+		if b, ok := elem.([]byte); ok {
+			s[i] = string(b)
+		}
+	}
+
+	// Return arrays as they are comparable/hashable.
 	switch len(s) {
 	// fast code paths for short arrays:
 	case 0:
